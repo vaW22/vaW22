@@ -1,0 +1,190 @@
+merged_code()
+'
+' Prepare_Finalsheet Macro
+'
+    Sheets("Sheet1").Select
+    Sheets("Sheet1").Name = "Final sheet"
+    Range("A1:J1").Select
+    Application.CutCopyMode = False
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorAccent2
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Range("K1:O1").Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorAccent5
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Sheets.Add After:=ActiveSheet
+    Sheets("Sheet2").Select
+    Sheets("Sheet2").Name = "Metrics"
+    Range("D10").Select
+    ActiveWindow.DisplayGridlines = False
+    ActiveWindow.DisplayGridlines = True
+    
+    
+    Columns("G:G").ColumnWidth = 20.36
+    Columns("H:H").ColumnWidth = 14.09
+    Columns("I:I").ColumnWidth = 13.73
+    Columns("H:H").ColumnWidth = 16
+    Columns("B:B").ColumnWidth = 31
+    ActiveWindow.DisplayGridlines = False
+
+' merge_b1_tads Macro
+'
+    Sheets("Metrics").Select
+    Windows("Copy of TADS_Final spread sheet preparation_V4"). _
+        Activate
+    Sheets("Final sheet").Select
+
+    Dim lastRow As Long
+    Dim cellValue As String
+    Dim valuesArray As Variant
+    Dim uniqueValues As Object
+    Dim count As Long
+
+    ' Get the last row in column A
+    lastRow = Cells(Rows.count, "L").End(xlUp).Row
+
+    ' Create a collection to store unique values
+    Set uniqueValues = CreateObject("Scripting.Dictionary")
+
+    ' Loop through each cell in column A
+    For i = 1 To lastRow
+        cellValue = Cells(i, "L").Value
+        valuesArray = Split(cellValue, ",")
+
+        ' Add each unique value to the collection, checking for duplicates
+        For Each Value In valuesArray
+            If Not uniqueValues.Exists(Value) Then ' Check for existence before adding
+                uniqueValues.Add Value, True
+            End If
+        Next Value
+    Next i
+
+    ' Count the unique values in the collection
+    count = uniqueValues.count
+
+    ' Rewrite the last line to write the count to the "Metrics" sheet, cell "O20":
+  Worksheets("Metrics").Range("O20").Value = count - 2
+  
+  Sheets("Metrics").Select
+  
+    Range("O16:O17").Select
+    Selection.copy
+    Range("I3:I4").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("O18").Select
+    Application.CutCopyMode = False
+    Selection.copy
+    Range("I15").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("O19").Select
+    Application.CutCopyMode = False
+    Selection.copy
+    Range("I17").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("O20").Select
+    Application.CutCopyMode = False
+    Selection.copy
+    Range("I18").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("O21").Select
+    Application.CutCopyMode = False
+    Selection.copy
+    Range("I20").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+        
+        
+' matricssht_connect Macro
+'
+
+    Range("B1:I23").Select
+    Selection.copy
+    Windows("Book1").Activate
+    Range("B1").Select
+    ActiveSheet.Paste
+    ActiveWindow.Zoom = 85
+    ActiveWindow.Zoom = 70
+
+' merge Macro
+'
+
+    Sheets("Final sheet").Select
+    Range("A1").Select
+    Windows("Copy of Copy of TADS_Final spread sheet preparation_V4 (002).xlsm"). _
+        Activate
+    Sheets("Final sheet").Select
+    Range("A1").Select
+
+
+' Copy&paste_finalsheet_values
+'
+
+    Range("A1:O999").Select
+    Selection.copy
+    Windows("Book1").Activate
+    Range("A1").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+ ' replace zero with empty space
+
+
+Cells.Replace What:="0", Replacement:="", LookAt:=xlWhole, SearchOrder _
+        :=xlByRows, MatchCase:=True, SearchFormat:=False, ReplaceFormat:=False, _
+        FormulaVersion:=xlReplaceFormula2
+        
+        
+' delete values in N and O column
+'
+
+Dim NlastRow As Long
+NlastRow = Cells(Rows.count, "N").End(xlUp).Row
+ 
+Range(Cells(2, "N"), Cells(NlastRow, "N")).Select
+Selection.ClearContents
+
+
+Dim OlastRow As Long
+OlastRow = Cells(Rows.count, "O").End(xlUp).Row
+ 
+
+Range("R2").Select
+    Selection.copy
+    Range(Cells(2, "O"), Cells(NlastRow, "O")).Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+
+        
+' metrics_critical_del
+'
+
+    Sheets("Metrics").Select
+    Range("G5:I6").Select
+    Selection.Delete Shift:=xlUp
+    Range("G3:G4").Select
+    ActiveCell.FormulaR1C1 = "Coverage Period"
+    
+
+' embargo_date_del
+'
+    Sheets("Final sheet").Select
+    Range("R2").Select
+    Selection.ClearContents
+
+End Sub
+
+
